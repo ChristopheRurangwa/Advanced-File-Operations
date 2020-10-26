@@ -9,4 +9,6 @@
 /Users/christopherurangwa/CLionProjects/Inventory/main.cpp
 iostream
 -
+fstream
+-
 
