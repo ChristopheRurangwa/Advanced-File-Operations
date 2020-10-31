@@ -67,9 +67,16 @@ int showMenu(){
 
             case 1:displayFile(file);
                 break;
-            case 2:
+            case 2: if(true){
+
+                    int record;
+                    cout<<"Enter record number to be displayed: ";
+                    cin>>record;
+                    createFile(file);
+                displayRecord(file, record );}
                 break;
-            case 3:
+            case 3:{createFile(file);
+                modifyRecord(file);}
                 break;
             case 4:exit(0);
             default:{
@@ -142,11 +149,10 @@ else {//<-if file already exists.
  * records and the record number on the screen.
  */
 void displayFile(fstream &file) {
-    string str;
+    //string str;
 
     Product pro,pro1,pro2,pro3,pro4;
 
-    int count=0;
 
     while(!file.eof()){
 
@@ -192,7 +198,24 @@ void displayFile(fstream &file) {
  * Clears the eof flag, then seeks to the record indicated by
  * the in parameter, and displays the Product record.
  */
-void displayRecord(fstream&, int){
+void displayRecord(fstream &file, int record ){
+
+    Product product;
+
+        file.clear();
+
+ file.seekg(record*sizeof(product), ios::end);
+
+file.read(reinterpret_cast<char *>(&product), sizeof(product));
+
+    cout<<"Product number: "<<product.number<<endl;
+    cout<<"Product name: "<<product.name<<endl;
+    cout<<"Product price: $"<<product.price<<endl;
+    cout<<"Product quantity: "<<product.quantity<<endl;
+
+
+    file.close();
+
 
 }
 
@@ -201,7 +224,31 @@ void displayRecord(fstream&, int){
  * seeks to that record number, and writes
  * the new values to replace the existing data.
  */
-void modifyRecord(fstream&){
+void modifyRecord(fstream&file){
+    Product product;
+    int record;
+cout<<"Enter the record number to be modified: ";
+cin>>record;cout<<endl;
+file.seekg(record*sizeof(product),ios::beg);
+file.read(reinterpret_cast<char *>(&product),sizeof(product));
+
+
+cin.getline(product.name,49);
+cout<<"Enter new data.\n";
+cout<<"Product number: #";cin>>product.number;
+cout<<"Product name: ";cin>>product.name;
+cout<<"Price: $";cin>>product.price;
+cout<<"Quantity: ";cin>>product.quantity;
+cout<<"All data for one product entered.\n";
+// move back to start
+    file.seekg(record*sizeof(product),ios::beg);
+    // write the data collected to file
+    file.write(reinterpret_cast<char *>(&product),sizeof(product));
+    file.close();
+
+
+
+
 
 
 }
